@@ -1,5 +1,7 @@
 package com.hamlet.whatsappclone.entity;
 
+import com.hamlet.whatsappclone.constants.ChatConstants;
+import com.hamlet.whatsappclone.constants.MessageConstants;
 import com.hamlet.whatsappclone.enums.MessageState;
 import com.hamlet.whatsappclone.enums.MessageType;
 import jakarta.persistence.*;
@@ -17,6 +19,11 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "chat")
+
+@NamedQuery(name = ChatConstants.FIND_CHAT_BY_SENDER_ID,
+        query = "SELECT DISTINCT c FROM Chat c WHERE c.sender.id = :senderId OR c.recipient.id = :senderId ORDER BY createdDate DESC")
+@NamedQuery(name = ChatConstants.FIND_CHAT_BY_SENDER_ID_RECEIVER,
+        query = "SELECT DISTINCT c FROM Chat c WHERE (c.sender.id = :senderId AND c.recipient.id = :recipientId) OR (c.sender.id = :recipientId AND c.recipient.id = :senderId)")
 public class Chat extends BaseAuditingEntity{
 
     @Id
