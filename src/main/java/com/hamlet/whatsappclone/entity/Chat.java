@@ -1,7 +1,6 @@
 package com.hamlet.whatsappclone.entity;
 
 import com.hamlet.whatsappclone.constants.ChatConstants;
-import com.hamlet.whatsappclone.constants.MessageConstants;
 import com.hamlet.whatsappclone.enums.MessageState;
 import com.hamlet.whatsappclone.enums.MessageType;
 import jakarta.persistence.*;

@@ -1,5 +1,6 @@
 package com.hamlet.whatsappclone.config;
 
+import com.hamlet.whatsappclone.entity.User;
 import com.hamlet.whatsappclone.repository.UserRepository;
 import com.hamlet.whatsappclone.service.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,16 @@ public class UserSynchronizer {
     public void synchronizeWithIdp(Jwt token) {
 
         log.info("Synchronizing user with idp");
+        getUserEmail(token).ifPresent(userEmail -> {
+            log.info("Synchronizing user having email {}", userEmail);
+            Optional<User> optionalUser = userRepository.findByEmail(userEmail);
+            User user = userMapper.fromTokenAttributes(token.getClaims());
+            optionalUser.ifPresent(value-> user.setId(optionalUser.get().getId()));
+
+            userRepository.save(user);
+
+        });
+
 
     }
 
