@@ -3,6 +3,7 @@ package com.hamlet.whatsappclone.service.impl;
 import com.hamlet.whatsappclone.entity.Chat;
 import com.hamlet.whatsappclone.entity.Message;
 import com.hamlet.whatsappclone.enums.MessageState;
+import com.hamlet.whatsappclone.enums.MessageType;
 import com.hamlet.whatsappclone.payload.request.MessageRequest;
 import com.hamlet.whatsappclone.payload.response.MessageResponse;
 import com.hamlet.whatsappclone.repository.ChatRepository;
@@ -70,9 +71,22 @@ public class MessageServiceImpl implements MessageService {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new EntityNotFoundException("Chat not found"));
         final String senderId = getSenderId(chat, authentication);
-        final String receiverId = getRecipientId(chat, authentication);
+        final String recipientId = getRecipientId(chat, authentication);
 
-        final String filePath = fileService.save(file, senderId);
+        final String filePath = fileService.saveFile(file, senderId);
+
+        Message message = new Message();
+        message.setChat(chat);
+        message.setSenderId(senderId);
+        message.setReceiverId(recipientId);
+        message.setMessageType(MessageType.IMAGE);
+        message.setState(MessageState.SENT);
+        message.setMediaFilePath(filePath);
+
+        messageRepository.save(message);
+
+        // todo notification
+
     }
 
     private String getSenderId(Chat chat, Authentication authentication) {
